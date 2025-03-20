@@ -12,4 +12,4 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$daan_edd_sl_shortcodes = new \Daan\EDD\SoftwareLicensing\Widget();
+$daan_edd_sl_shortcodes = new \Daan\EDD\SoftwareLicensing\Shortcodes();
