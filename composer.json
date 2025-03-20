@@ -1,0 +1,18 @@
+{
+    "name": "daan/edd-sl-shortcodes",
+    "description": "Add additional shortcodes for use with EDD Software Licensing.",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Daan\\EDD\\SoftwareLicensing\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dan0sz",
+            "email": "18595395+Dan0sz@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
