@@ -82,7 +82,8 @@ class Shortcodes {
 		$atts = array_change_key_case( (array) $atts, CASE_LOWER );
 		$atts = shortcode_atts(
 			[
-				'id' => get_the_ID(),
+				'id'    => get_the_ID(),
+				'title' => __( 'Changelog', 'daan-edd-sl' ),
 			],
 			$atts,
 			$tag
@@ -94,13 +95,15 @@ class Shortcodes {
 			return '';
 		}
 
-		$output = "<div id='daan-edd-sl-changelog' class='daan-edd-sl-changelog' style='display: none;'><div class='daan-edd-sl-changelog-inner'><span id='daan-edd-sl-close-changelog'>×</span><div class='container'>";
-
-		foreach ( $post_meta as $meta ) {
-			$output .= $meta;
-		}
-
-		$output .= "</div></div></div>";
+		$title  = $atts[ 'title' ];
+		$output = "<div id='daan-edd-sl-changelog' class='daan-edd-sl-changelog' style='display: none;'>";
+		$output .= "<header class='daan-edd-sl-changelog-header'>";
+		$output .= "<div class='daan-edd-sl-changelog-title'>$title</div>";
+		$output .= "<button id='daan-edd-sl-changelog-close'>×</button>";
+		$output .= "</header>";
+		$output .= "<div class='daan-edd-sl-changelog-content'>";
+		$output .= implode( '', $post_meta );
+		$output .= "</div></div>";
 
 		return $output;
 	}

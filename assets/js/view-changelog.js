@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * Hide changelog.
      */
-    document.getElementById('daan-edd-sl-close-changelog').addEventListener('click', function () {
+    document.getElementById('daan-edd-sl-changelog-close').addEventListener('click', function () {
         let changelog = document.getElementById('daan-edd-sl-changelog');
 
         changelog.style.display = 'none';
