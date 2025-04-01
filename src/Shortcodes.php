@@ -22,9 +22,51 @@ class Shortcodes {
 	 * @return void
 	 */
 	private function init() {
+		/**
+		 * Enqueue assets.
+		 */
+		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_enqueue_assets' ] );
+
+		/**
+		 * Shortcodes
+		 */
 		add_shortcode( 'changelog', [ $this, 'render_changelog' ] );
 		add_shortcode( 'edd_dl_version', [ $this, 'render_version' ] );
 		add_shortcode( 'edd_dl_last_updated', [ $this, 'render_date_last_updated' ] );
+
+		/**
+		 * Render widget and changelog section.
+		 */
+		add_action( 'widgets_init', [ $this, 'register_widget' ] );
+		add_action( 'wp_footer', [ $this, 'maybe_render_changelog_section' ] );
+	}
+
+	/**
+	 * Assets are only enqueued if widget is active.
+	 *
+	 * @return void
+	 */
+	public function maybe_enqueue_assets() {
+		if ( ! $this->is_widget_active() ) {
+			return;
+		}
+
+		$filemtime = filemtime( plugin_dir_path( EDD_SL_SHORTCODES_PLUGIN_FILE ) . 'assets/css/view-changelog.min.css' );
+
+		wp_enqueue_style( 'daan-edd-sl-view-changelog', plugin_dir_url( EDD_SL_SHORTCODES_PLUGIN_FILE ) . 'assets/css/view-changelog.min.css', [], $filemtime );
+
+		$filemtime = filemtime( plugin_dir_path( EDD_SL_SHORTCODES_PLUGIN_FILE ) . 'assets/js/view-changelog.min.js' );
+
+		wp_enqueue_script( 'daan-edd-sl-view-changelog', plugin_dir_url( EDD_SL_SHORTCODES_PLUGIN_FILE ) . 'assets/js/view-changelog.min.js', [], $filemtime, [ 'defer' => true ] );
+	}
+
+	/**
+	 * Check if our widget is active on current page.
+	 *
+	 * @return false|string
+	 */
+	private function is_widget_active() {
+		return is_active_widget( false, false, Widget::ID );
 	}
 
 	/**
@@ -38,10 +80,9 @@ class Shortcodes {
 	 */
 	public function render_changelog( $atts = [], $content = null, $tag = '' ) {
 		$atts = array_change_key_case( (array) $atts, CASE_LOWER );
-
 		$atts = shortcode_atts(
 			[
-				'id' => '0',
+				'id' => get_the_ID(),
 			],
 			$atts,
 			$tag
@@ -49,13 +90,17 @@ class Shortcodes {
 
 		$post_meta = apply_filters( 'daan_changelog_contents', get_post_meta( $atts[ 'id' ], '_edd_sl_changelog' ) );
 
-		$output = "<div class='daan-edd-changelog'>";
+		if ( ! $post_meta ) {
+			return '';
+		}
+
+		$output = "<div id='daan-edd-sl-changelog' class='daan-edd-sl-changelog' style='display: none;'><div class='daan-edd-sl-changelog-inner'><span id='daan-edd-sl-close-changelog'>×</span><div class='container'>";
 
 		foreach ( $post_meta as $meta ) {
 			$output .= $meta;
 		}
 
-		$output .= "</div>";
+		$output .= "</div></div></div>";
 
 		return $output;
 	}
@@ -97,7 +142,10 @@ class Shortcodes {
 
 		$readme_url = get_post_meta( $attributes[ 'id' ], '_edd_readme_location', true ) ?? '';
 
-		if ( ! $readme_url ) {
+		/**
+		 * A bug in EDD (or EDD SL) causes the value to be saved as (string) "false" sometimes.
+		 */
+		if ( ! $readme_url || $readme_url === 'false' ) {
 			return '';
 		}
 
@@ -112,5 +160,23 @@ class Shortcodes {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Register the widget.
+	 *
+	 * @return void
+	 */
+	public function register_widget() {
+		register_widget( '\Daan\EDD\SoftwareLicensing\Widget' );
+	}
+
+	public function maybe_render_changelog_section() {
+		if ( ! $this->is_widget_active() ) {
+			return;
+		}
+
+		$changelog = new Changelog();
+		$changelog->render();
 	}
 }
