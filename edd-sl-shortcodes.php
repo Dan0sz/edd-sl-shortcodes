@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Easy Digital Downloads - Software Licensing Shortcodes
  * Description: Add additional shortcodes to Software Licensing.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Daan from Daan.dev
  * Author URI: https://daan.dev
  * GitHub Plugin URI: Dan0sz/edd-sl-shortcodes
