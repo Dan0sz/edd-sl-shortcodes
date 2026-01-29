@@ -181,7 +181,15 @@ class Shortcodes {
 		if ( defined( 'CAAS_VERSION' ) ) {
 			global $post;
 			
-			$id = $post->ID;
+			$id = '';
+			
+			if ( $post instanceof \WP_Post ) {
+				$id = $post->ID;
+			}
+			
+			if ( ! $id ) {
+				return;
+			}
 			
 			return do_shortcode( "[changelog_service edd_id=$id]" );
 		}
