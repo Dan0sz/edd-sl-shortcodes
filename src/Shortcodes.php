@@ -33,6 +33,11 @@ class Shortcodes {
 		add_shortcode( 'changelog', [ $this, 'render_changelog' ] );
 		add_shortcode( 'edd_dl_version', [ $this, 'render_version' ] );
 		add_shortcode( 'edd_dl_last_updated', [ $this, 'render_date_last_updated' ] );
+		
+		/**
+		 * Changelog as a Service compatibility
+		 */
+		add_filter( 'daan_changelog_contents', [ $this, 'maybe_modify_output' ] );
 
 		/**
 		 * Render widget and changelog section.
@@ -50,6 +55,8 @@ class Shortcodes {
 		if ( ! $this->is_widget_active() ) {
 			return;
 		}
+		
+		global $post;
 
 		$filemtime = filemtime( plugin_dir_path( EDD_SL_SHORTCODES_PLUGIN_FILE ) . 'assets/css/view-changelog.min.css' );
 
@@ -102,7 +109,7 @@ class Shortcodes {
 		$output .= "<button id='daan-edd-sl-changelog-close'>×</button>";
 		$output .= "</header>";
 		$output .= "<div class='daan-edd-sl-changelog-content'>";
-		$output .= implode( '', $post_meta );
+		$output .= is_array( $post_meta ) ? implode( '', $post_meta ) : $post_meta;
 		$output .= "</div></div>";
 
 		return $output;
@@ -163,6 +170,21 @@ class Shortcodes {
 		}
 
 		return '';
+	}
+	
+	/**
+	 * @param $output
+	 *
+	 * @return string|void
+	 */
+	public function maybe_modify_output( $output ) {
+		if ( defined( 'CAAS_VERSION' ) ) {
+			global $post;
+			
+			$id = $post->ID;
+			
+			return do_shortcode( "[changelog_service edd_id=$id]" );
+		}
 	}
 
 	/**
