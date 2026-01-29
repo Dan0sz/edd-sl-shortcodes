@@ -1,0 +1,28 @@
+{
+  "name": "edd-sl-shortcodes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prod": "node scripts/minify-all.js",
+    "watch": "chokidar 'assets/js/**/*.js' 'assets/css/**/*.css' -i 'assets/**/*.min.*' -c 'npm run prod'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dan0sz/edd-sl-shortcodes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Dan0sz/edd-sl-shortcodes/issues"
+  },
+  "homepage": "https://github.com/Dan0sz/edd-sl-shortcodes#readme",
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "clean-css": "^5.3.3",
+    "glob": "^13.0.0",
+    "uglify-js": "^3.19.3"
+  }
+}

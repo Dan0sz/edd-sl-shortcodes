@@ -13,6 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm ci
+        
+      - run: npm run prod
+
       - name: Generate plugin artifact
         run: |
           mkdir -p release/edd-sl-shortcodes
