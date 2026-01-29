@@ -173,11 +173,11 @@ class Shortcodes {
 	}
 	
 	/**
-	 * @param $output
+	 * @param $post_meta
 	 *
-	 * @return string|void
+	 * @return string|array
 	 */
-	public function maybe_modify_output( $output ) {
+	public function maybe_modify_output( $post_meta ) {
 		if ( defined( 'CAAS_VERSION' ) ) {
 			global $post;
 			
@@ -188,11 +188,13 @@ class Shortcodes {
 			}
 			
 			if ( ! $id ) {
-				return;
+				return $post_meta;
 			}
 			
 			return do_shortcode( "[changelog_service edd_id=$id]" );
 		}
+		
+		return $post_meta;
 	}
 
 	/**
