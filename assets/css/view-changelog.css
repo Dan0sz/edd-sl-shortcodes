@@ -31,3 +31,7 @@
 #daan-edd-sl-changelog .container {
     padding: 2rem;
 }
+
+#daan-edd-sl-changelog .caas-changelog ul li {
+    border-bottom: 0;
+}
